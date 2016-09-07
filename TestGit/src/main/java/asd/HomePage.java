@@ -3,9 +3,13 @@ package asd;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HomePage {
     private WebDriver driver;
+    private WebDriverWait wait;
     private By lockupCodeword = By.id("lockup_codeword");
     // private WebElement registerButton = driver.findElement(By.cssSelector("a[class='button button--register']"));
     // private By registerButton = By.xpath("//a[@class='button button--register']");
@@ -13,6 +17,7 @@ public class HomePage {
 
     public HomePage(WebDriver driver){
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, 10);
     }
 
     public void open(){
@@ -26,7 +31,8 @@ public class HomePage {
     }
 
     public void clickRegister() throws InterruptedException {
-        Thread.sleep(3000);
+        wait.until(ExpectedConditions.elementToBeClickable(registerButton));
+        Thread.sleep(1000);
         driver.findElement(registerButton).click();
     }
 }

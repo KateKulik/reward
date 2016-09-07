@@ -1,7 +1,10 @@
 package asd;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Random;
 
@@ -9,14 +12,16 @@ import java.util.Random;
 public class RegisterPage {
 
     private WebDriver driver;
+    private WebDriverWait wait;
+    private JavascriptExecutor jse;
 
     private By nameField = By.id("auth__name");
     private By emailField = By.id("auth__email");
     private By passwordField = By.id("auth__password");
     private By confirmPasswordField = By.id("auth__password_confirmation");
     //private By termsCheckBox = By.partialLinkText("agree");
-    private By termsCheckBox = By.id("auth__terms_of_service");
-    private By registerNow = By.linkText("Register now");
+    private By termsCheckBox = By.cssSelector(".auth__form-checkbox-label--agree");
+    private By registerNow = By.cssSelector("[type=\"submit\"]");
 
     private Random random = new Random();
     private int number = random.nextInt(1000);
@@ -25,7 +30,9 @@ public class RegisterPage {
     private String randomEmail = "test"+randoms+"@test.test";
 
 
-    public void enterName(){
+    public void enterName() throws InterruptedException {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(nameField));
+        Thread.sleep(500);
         driver.findElement(nameField).click();
         driver.findElement(nameField).sendKeys(randomEmail);
     }
@@ -46,9 +53,10 @@ public class RegisterPage {
     }
 
     public void checkTermsBox() throws InterruptedException {
-        Thread.sleep(3000);
-        driver.findElement(termsCheckBox).click();
-        Thread.sleep(3000);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(termsCheckBox));
+        Thread.sleep(1000);
+        jse.executeScript("document.getElementById('auth__terms_of_service').click()");
+        Thread.sleep(1000);
     }
 
     public void clickRegisterNow() throws InterruptedException {
@@ -58,6 +66,8 @@ public class RegisterPage {
 
     public RegisterPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, 10);
+        this.jse = (JavascriptExecutor) driver;
     }
 
     public String findText() {
